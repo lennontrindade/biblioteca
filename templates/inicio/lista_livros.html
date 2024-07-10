@@ -1,0 +1,46 @@
+{% extends 'inicio/base.html' %}
+{% load static %}
+
+{% block content %}
+<header class="p-3 bg-dark text-white">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="{% url 'index' %}" class="nav-link px-2 text-white">Home</a></li>
+            </ul>
+
+</header>
+<div class="container">
+    <h1>Listagem de Livros</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for foto in fotos %}
+        <div class="col">
+            <div class="card">
+                <a href="{% url 'imagem' foto.id %}">
+                    <img src="{{ foto.foto.url }}" width="150" height="500" class="card-img-top" alt="{{ foto.nome }}">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ foto.nome }}</h5>
+                    <p class="card-text">{{ foto.descricao }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Nenhum livro encontrado.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

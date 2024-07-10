@@ -1,0 +1,71 @@
+{% extends 'inicio/base.html' %}
+{% load static %}
+{% block content %}
+<header class="p-3 text-bg-dark">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="{% url 'index' %}" class="nav-link px-2 text-secondary">home</a></li>
+            </ul>
+
+            <form id="searchForm" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search"
+                  onsubmit="return handleSearch()">
+                <input type="search" id="searchInput" name="search" class="form-control form-control-dark text-white"
+                       placeholder="pesquisar..." aria-label="Search">
+                <button type="submit" class="btn btn-outline-light">pesquisar</button>
+            </form>
+            <div class="text-end">
+                {% if user.is_authenticated %}
+                <p>Logado como {{ user.username }}.</p>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-light me-2">sair</button>
+                </form>
+                {% else %}
+                <a href="{% url 'login' %}">
+                    <button type="button" class="btn btn-outline-light me-2">Login</button>
+                </a>
+                <a href="{% url 'signup' %}">
+                    <button type="button" class="btn btn-warning">cadastrar-se</button>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-2 g-4 ">
+        <div class="col-6 mx-auto m-5">
+            {% for foto in foto %}
+            <div class="row">
+                <div class="container col">
+                    <div class="card">
+                        <img src="{{ foto.foto.url }}" class="img-fluid" style="max-width 300px; max-height: 500px;"
+                             alt="{{ foto.nome }}">
+                    </div>
+                </div>
+                <div class="container col">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ foto.nome }}</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ foto.autor }}</h6>
+                            <p class="card-text"> {{ foto.descricao }}</p>
+                            <form method="post" action="{% url 'reservar_livro' foto.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">alugar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

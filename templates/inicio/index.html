@@ -1,0 +1,89 @@
+{% extends 'inicio/base.html' %}
+{% load static %}
+
+{% block content %}
+<header class="p-3 bg-dark text-white">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="{% url 'index' %}" class="nav-link px-2 text-white">Home</a></li>
+                <li><a href="{% url 'livros_alugados' %}" class="nav-link px-2 text-white">livros alugados</a></li>
+                <li><a href="{% url 'filtro_livros' %}" class="nav-link px-2 text-white">Filtrar Livros</a></li>
+            </ul>
+            <form id="searchForm" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search"
+                  action="{% url 'search' %}" method="get">
+                <input type="search" id="searchInput" name="search" class="form-control form-control-dark text-white"
+                       placeholder="pesquisar..." aria-label="Search">
+                <button type="submit" class="btn btn-outline-light">pesquisar</button>
+            </form>
+
+            <div class="text-end">
+                {% if user.is_authenticated %}
+                <p>Logado como {{ user.username }}.</p>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-light me-2">sair</button>
+                </form>
+                {% else %}
+                <a href="{% url 'login' %}">
+                    <button type="button" class="btn btn-outline-light me-2">Login</button>
+                </a>
+                <a href="{% url 'signup' %}">
+                    <button type="button" class="btn btn-warning">cadastrar-se</button>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col text-center">
+            <h1 class="bd-title mt-0">Conheça nosso acervo</h1>
+            <p class="bd-lead">
+                Bem-vindo à nossa Biblioteca, um espaço dedicado ao conhecimento, à cultura e ao crescimento pessoal.
+
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for foto in cards %}
+        <div class="col">
+            <div class="card h-100">
+                <a href="{% url 'imagem' foto.id %}">
+                    <img src="{{ foto.foto.url }}" class="card-img-top img-fluid" alt="{{ foto.nome }}">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ foto.nome }}</h5>
+                    <p class="card-text">{{ foto.descricao }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col text-center">
+            <h1 class="mt-5">Quem somos</h1>
+            <p>
+                Desde a nossa fundação em 1965, temos sido um ponto de encontro para amantes da leitura, estudantes,
+                pesquisadores e a comunidade em geral.
+
+
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
